@@ -64,6 +64,7 @@ public class PlanService implements PlanInterface {
             if (!CollectionUtils.isEmpty(gymPlans)) {
                 for (Plan e : gymPlans) {
                     GymPlan plan = new GymPlan();
+                    plan.setPlanId(e.getPlanId()+"");
                     plan.setPlanName(e.getPlanName());
                     plan.setPlanPrice(e.getPlanPrice());
                     plan.setPlanDuration(e.getPlanDuration());

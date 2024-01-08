@@ -63,6 +63,7 @@ public class NewBatchService implements NewBatchInterface {
             if (!CollectionUtils.isEmpty(gymBatches)) {
                 for (NewBatch e : gymBatches) {
                     GymBatch batch = new GymBatch();
+                    batch.setBatchId(e.getBatchId() + "");
                     batch.setBatchName(e.getBatchName());
                     batch.setBatchLimit(e.getBatchLimit());
                     batch.setBatchEndTime(e.getBatchEndTime());

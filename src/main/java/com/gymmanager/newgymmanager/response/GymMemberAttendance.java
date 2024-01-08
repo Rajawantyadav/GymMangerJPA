@@ -11,4 +11,5 @@ public class GymMemberAttendance {
     private String punchInTime;
     private String punchOutTime;
 
+
 }

@@ -30,5 +30,9 @@ public class ExpenseController {
     public ResponseEntity<APiResp> updateExpense(@RequestBody GymExpense expenseDetails) {
         return expenseService.updateExpense(expenseDetails);
     }
+    @GetMapping("testmsg")
+    public ResponseEntity<String> updateExpense() {
+        return new ResponseEntity<>("Hello docker",HttpStatus.ACCEPTED);
+    }
 
 }

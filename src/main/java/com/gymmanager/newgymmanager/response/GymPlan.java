@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GymPlan {
+    private String planId;
     private String planName;
     private String planPrice;
     private String planDuration;

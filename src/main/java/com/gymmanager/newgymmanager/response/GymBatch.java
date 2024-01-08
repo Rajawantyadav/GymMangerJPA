@@ -7,6 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GymBatch {
+    private String batchId;
     private String batchName;
     private String batchStartTime;
     private String batchEndTime;
