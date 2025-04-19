@@ -7,12 +7,24 @@ import com.gymmanager.newgymmanager.response.APiResp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class GymOwnerService implements GymOwnerInterface {
     @Autowired
     private GymOwnerRepo gymOwnerRepo;
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
     @Override
@@ -46,6 +58,7 @@ public class GymOwnerService implements GymOwnerInterface {
         APiResp resp = new APiResp();
         if (gymOwnerDetails != null) {
             gymOwnerDetails.setOwnerActive("1");
+            gymOwnerDetails.setOwnerPassword(bCryptPasswordEncoder.encode(gymOwnerDetails.getOwnerPassword()));
             GymOwner gymOwner = gymOwnerRepo.save(gymOwnerDetails);
             if (gymOwner != null) {
                 resp.setError("false");
@@ -76,10 +89,15 @@ public class GymOwnerService implements GymOwnerInterface {
 
     @Override
     public ResponseEntity<APiResp> login(LoginReq req) {
+        String token = "";
         APiResp resp = new APiResp();
         if (req != null) {
-            GymOwner gymOwner = gymOwnerRepo.findByOwnerEmailAndOwnerPasswordAndOwnerActive(req.getUserEmailId(), req.getPassword(), "1").orElseThrow();
-            if (gymOwner != null) {
+            // GymOwner gymOwner = gymOwnerRepo.findByOwnerEmailAndOwnerPasswordAndOwnerActive(req.getUserEmailId(), bCryptPasswordEncoder.encode(req.getPassword()), "1").orElseThrow();
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(req.getUserEmailId(), req.getPassword()));
+            GymOwner gymOwner = gymOwnerRepo.findByOwnerEmail(req.getUserEmailId());
+            if (authentication.isAuthenticated()) {
+                token = jwtService.generateToken(gymOwner);
+                resp.setToken(token);
                 resp.setError("false");
                 resp.setMsg("Login successfully..");
                 resp.setOwnerId(gymOwner.getOwnerId() + "");
@@ -89,12 +107,10 @@ public class GymOwnerService implements GymOwnerInterface {
                 resp.setMsg("email or password is incorrect..");
                 return new ResponseEntity<>(resp, HttpStatus.NOT_FOUND);
             }
-        } else {
-            resp.setError("true");
-            resp.setMsg("Some Parameters missing ??.");
-            return new ResponseEntity<>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
+        resp.setError("true");
+        resp.setMsg("Some Parameters missing ??.");
+        return new ResponseEntity<>(resp, HttpStatus.INTERNAL_SERVER_ERROR);
 
     }
 }

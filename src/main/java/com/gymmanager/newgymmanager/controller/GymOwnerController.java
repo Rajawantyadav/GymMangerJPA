@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api")
 public class GymOwnerController {
     @Autowired
     private GymOwnerService gymOwnerService;

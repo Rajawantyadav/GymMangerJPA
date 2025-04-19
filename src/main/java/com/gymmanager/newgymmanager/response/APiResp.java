@@ -7,7 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class APiResp {
-    String error;
-    String msg;
-    String ownerId;
+    private String error;
+    private String msg;
+    private String ownerId;
+    private String token;
 }
