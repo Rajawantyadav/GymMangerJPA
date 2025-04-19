@@ -1,5 +1,6 @@
 package com.gymmanager.newgymmanager.service;
 
+import com.gymmanager.newgymmanager.jwtconfig.JwtService;
 import com.gymmanager.newgymmanager.model.GymOwner;
 import com.gymmanager.newgymmanager.model.NewBatch;
 import com.gymmanager.newgymmanager.repository.GymOwnerRepo;
@@ -23,6 +24,9 @@ public class NewBatchService implements NewBatchInterface {
     private NewBatchRepo newBatchRepo;
     @Autowired
     private GymOwnerRepo gymOwnerRepo;
+
+    @Autowired
+    private JwtService jwtService;
 
     @Override
     public ResponseEntity<APiResp> addBatch(BatchReq batchReq) {
@@ -55,10 +59,20 @@ public class NewBatchService implements NewBatchInterface {
     }
 
     @Override
-    public ResponseEntity<BatchResp> getBatch(String ownerId) {
+    public ResponseEntity<BatchResp> getBatch(String token) {
         BatchResp resp = new BatchResp();
+        String userName = jwtService.extractUserName(token);
+        GymOwner gymOwner = gymOwnerRepo.findByOwnerEmail(userName);
+        if (gymOwner == null) {
+            resp.setError("true");
+            resp.setMsg("gym owner not found..");
+            resp.setBatches(new ArrayList<>());
+            resp.setOwnerId("");
+            return new ResponseEntity<>(resp, HttpStatus.NOT_FOUND);
+        }
+        long ownerId = gymOwner.getOwnerId();
         try {
-            List<NewBatch> gymBatches = newBatchRepo.findByGymOwnerOwnerId(Long.parseLong(ownerId));
+            List<NewBatch> gymBatches = newBatchRepo.findByGymOwnerOwnerId(ownerId);
             List<GymBatch> batches = new ArrayList<>();
             if (!CollectionUtils.isEmpty(gymBatches)) {
                 for (NewBatch e : gymBatches) {
@@ -72,22 +86,22 @@ public class NewBatchService implements NewBatchInterface {
                 }
                 resp.setError("false");
                 resp.setMsg("batches found..");
-                resp.setOwnerId(ownerId);
+                resp.setOwnerId(ownerId + "");
                 resp.setBatches(batches);
                 return new ResponseEntity<>(resp, HttpStatus.OK);
             } else {
-                resp.setError("true");
+                resp.setError("false");
                 resp.setMsg("batches not found..");
                 resp.setBatches(new ArrayList<>());
-                resp.setOwnerId(ownerId);
-                return new ResponseEntity<>(resp, HttpStatus.NOT_FOUND);
+                resp.setOwnerId(ownerId + "");
+                return new ResponseEntity<>(resp, HttpStatus.OK);
 
             }
 
         } catch (Exception e) {
             resp.setError("true");
             resp.setMsg("Exception found..");
-            resp.setOwnerId(ownerId);
+            resp.setOwnerId(ownerId + "");
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

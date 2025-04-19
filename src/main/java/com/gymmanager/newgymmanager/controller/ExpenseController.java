@@ -5,6 +5,7 @@ import com.gymmanager.newgymmanager.request.ExpenseReq;
 import com.gymmanager.newgymmanager.response.APiResp;
 import com.gymmanager.newgymmanager.response.GymExpenseResp;
 import com.gymmanager.newgymmanager.service.GymExpenseService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,13 @@ public class ExpenseController {
     private GymExpenseService expenseService;
 
     @PostMapping("addExpense")
-    public ResponseEntity<APiResp> addExpense(@RequestBody ExpenseReq expenseReq) {
+    public ResponseEntity<APiResp> addExpense(HttpServletRequest request, @RequestBody ExpenseReq expenseReq) {
+        String token =request.getHeader("Authorization");
+        if(token==null || token.isEmpty()) {
+            APiResp aPiResp=new APiResp();
+            aPiResp.setError("true");
+            return new ResponseEntity<>(aPiResp, HttpStatus.FORBIDDEN);
+        }
         return expenseService.addExpense(expenseReq);
     }
     @GetMapping("getGymExpense/{ownerId}")
@@ -25,7 +32,13 @@ public class ExpenseController {
         return expenseService.getGymExpense(ownerId);
     }
     @PostMapping("updateExpense")
-    public ResponseEntity<APiResp> updateExpense(@RequestBody GymExpense expenseDetails) {
+    public ResponseEntity<APiResp> updateExpense( HttpServletRequest request,@RequestBody GymExpense expenseDetails) {
+        String token =request.getHeader("Authorization");
+        if(token==null || token.isEmpty()) {
+            APiResp aPiResp=new APiResp();
+            aPiResp.setError("true");
+            return new ResponseEntity<>(aPiResp, HttpStatus.FORBIDDEN);
+        }
         return expenseService.updateExpense(expenseDetails);
     }
     @GetMapping("testmsg")
