@@ -1,7 +1,6 @@
-package com.gymmanager.newgymmanager.config;
+package com.gymmanager.newgymmanager.jwtconfig;
 
 
-import com.gymmanager.newgymmanager.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

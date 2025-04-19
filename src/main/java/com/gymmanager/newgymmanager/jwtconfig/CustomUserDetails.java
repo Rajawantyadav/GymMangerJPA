@@ -1,4 +1,4 @@
-package com.gymmanager.newgymmanager.service;
+package com.gymmanager.newgymmanager.jwtconfig;
 
 import com.gymmanager.newgymmanager.model.GymOwner;
 import org.springframework.beans.factory.annotation.Autowired;

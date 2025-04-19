@@ -1,5 +1,6 @@
 package com.gymmanager.newgymmanager.service;
 
+import com.gymmanager.newgymmanager.jwtconfig.JwtService;
 import com.gymmanager.newgymmanager.model.GymOwner;
 import com.gymmanager.newgymmanager.repository.GymOwnerRepo;
 import com.gymmanager.newgymmanager.request.LoginReq;

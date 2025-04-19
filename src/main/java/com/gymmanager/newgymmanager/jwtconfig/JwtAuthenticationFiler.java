@@ -1,7 +1,6 @@
-package com.gymmanager.newgymmanager.config;
+package com.gymmanager.newgymmanager.jwtconfig;
 
 
-import com.gymmanager.newgymmanager.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

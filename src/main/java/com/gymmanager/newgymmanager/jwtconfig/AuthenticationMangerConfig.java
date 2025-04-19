@@ -1,4 +1,4 @@
-package com.gymmanager.newgymmanager.config;
+package com.gymmanager.newgymmanager.jwtconfig;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
