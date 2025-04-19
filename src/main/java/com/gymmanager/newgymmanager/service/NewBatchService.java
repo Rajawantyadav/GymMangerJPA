@@ -81,6 +81,7 @@ public class NewBatchService implements NewBatchInterface {
                 resp.setBatches(new ArrayList<>());
                 resp.setOwnerId(ownerId);
                 return new ResponseEntity<>(resp, HttpStatus.NOT_FOUND);
+
             }
 
         } catch (Exception e) {
