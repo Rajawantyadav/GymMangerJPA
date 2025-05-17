@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,10 +26,10 @@ public class WebSecurityConfig {
         httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("login","addGymOwner").permitAll()
-                        .requestMatchers("/api/**").authenticated() // allow unauthenticated access// allow unauthenticated access
+                        .requestMatchers("/login","/addGymOwner").permitAll()
+                        .requestMatchers("/actuator/health", "/actuator/info").permitAll()  // public endpoints
+                        .requestMatchers("/api/**","/actuator/metrics/**").authenticated() // allow unauthenticated access// allow unauthenticated access
                         .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
                 .addFilterBefore(jwtAuthenticationFiler, AuthenticationFilter.class);
         return httpSecurity.build();
 
@@ -44,6 +43,5 @@ public class WebSecurityConfig {
         authenticationProvider.setPasswordEncoder(passwordEncoderConfig.bCryptPasswordEncoder());
         return authenticationProvider;
     }
-
 
 }
